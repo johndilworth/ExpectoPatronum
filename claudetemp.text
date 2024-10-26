@@ -1,0 +1,29 @@
+# 1. First, let's start fresh. Go back to home directory and remove the previous attempt
+cd ~
+rm -rf python3-wiimote
+
+# 2. Install ALL necessary build dependencies
+sudo apt-get update
+sudo apt-get install -y build-essential automake autoconf libtool libbluetooth-dev python3-dev python3-pip flex bison
+
+# 3. Clone the better-maintained fork of cwiid
+git clone https://github.com/abstrakraft/cwiid.git
+
+# 4. Change into the directory
+cd cwiid
+
+# 5. Run the complete build process
+aclocal
+autoheader
+automake --add-missing
+autoconf
+
+# 6. Configure with Python 3 support
+./configure --with-python=python3
+
+# 7. Now try to make
+make
+sudo make install
+
+# 8. Update the shared library cache
+sudo ldconfig
