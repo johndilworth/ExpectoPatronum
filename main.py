@@ -1,8 +1,7 @@
-#/usr/bin/python
+#!/usr/bin/python
 from wiimote import Wiimote
 import cwiid
 import time
-
 import pi3d
 import logging
 import os
@@ -26,18 +25,18 @@ wii.connection_fun()
 used_sec = 0
 validation_sec = 10
 
-#black backgroud left transparent during development
-BACKGROUND = (0.0,0.0,0.0,1.0)
+# black background left transparent during development
+BACKGROUND = (0.0, 0.0, 0.0, 1.0)
 
-#set display, this is fullscreen but I really don't know why or how
-DISPLAY = pi3d.Display.create(background=BACKGROUND,x=0, y=0, frames_per_second=15)
+# set display, this is fullscreen but I really don't know why or how
+DISPLAY = pi3d.Display.create(background=BACKGROUND, x=0, y=0, frames_per_second=15)
 
-#not a clue what this does
+# not a clue what this does
 shader = pi3d.Shader("uv_flat")
 
 alpha_step_out = 0.03
 
-#set up sprites for each image
+# set up sprites for each image
 img_dir = "images"
 
 images = []
@@ -45,7 +44,7 @@ images = []
 logger.info("Loading images")
 
 for file in os.listdir(img_dir):
-	images.append(pi3d.ImageSprite(img_dir + "/" + file, shader, w = 20, h = 15));
+    images.append(pi3d.ImageSprite(img_dir + "/" + file, shader, w=20, h=15))
 logger.info("Images loaded")
 
 image_displayed = 0
@@ -53,23 +52,23 @@ working = 0
 
 def fade_in(image):
     DISPLAY.add_sprites(image)
-    start = time.clock();
+    start = time.clock()
     logger.info("Fade In")
     alpha = 0
     X = 1
     while DISPLAY.loop_running():
-	increment = 0.005*2**((2*(-1 + X))/9.)*5**((-1 + X)/9.)
+        increment = 0.005 * 2**((2*(-1 + X))/9.) * 5**((-1 + X)/9.)
         image.set_alpha(alpha)
         image.draw()
         alpha = (alpha + increment)
-	X = X + 0.2 
+        X = X + 0.2
         if alpha > 1.01:
             break
     end = time.clock()
     logger.info("Fade In End " + repr(end - start))
 
 def fade_out(image):
-    start = time.clock();
+    start = time.clock()
     logger.info("Fade Out")
     alpha = 1
     while DISPLAY.loop_running():
@@ -77,12 +76,12 @@ def fade_out(image):
         image.draw()
         alpha = (alpha - alpha_step_out)
         if alpha < 0:
-	    break
+            break
     end = time.clock()
     DISPLAY.remove_sprites(image)
     logger.info("Fade Out End " + repr(end - start))
 
-#main program loop          
+# main program loop          
 while DISPLAY.loop_running():
     try:
         sec = time.localtime(time.time()).tm_sec
@@ -113,4 +112,4 @@ while DISPLAY.loop_running():
 #            DISPLAY.destroy()
 #            break
     except AttributeError:
-	logger.info("Error!")
+        logger.info("Error!")
